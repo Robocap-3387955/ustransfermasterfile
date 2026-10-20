@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>US Transfer Masterfile Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="page-header">
+  <div>
+    <h1>US Transfer Masterfile Dashboard</h1>
+    <p>Interactive transfer list</p>
+  </div>
+  <button id="exportButton" class="button">Export Filtered CSV</button>
+</header>
+
+<main class="container">
+
+  <section class="filters">
+    <div class="filter-block">
+      <label>Transfer Year</label>
+      <div class="range-row">
+        <span>From:</span>
+        <select id="yearFrom"></select>
+      </div>
+      <div class="range-row">
+        <span>To:</span>
+        <select id="yearTo"></select>
+      </div>
+
+      <label class="second-label">Transfer Month</label>
+      <div class="range-row">
+        <span>From:</span>
+        <select id="monthFrom"></select>
+      </div>
+      <div class="range-row">
+        <span>To:</span>
+        <select id="monthTo"></select>
+      </div>
+    </div>
+
+    <div class="filter-block">
+      <label>Outgoing Clients</label>
+      <select id="outgoingClient"></select>
+    </div>
+
+    <div class="filter-block">
+      <label>Incoming Client</label>
+      <select id="incomingClient"></select>
+    </div>
+
+    <div class="filter-block">
+      <label>Status</label>
+      <select id="status"></select>
+
+      <label class="second-label">View of this List</label>
+      <select id="listView">
+        <option value="all">All Records</option>
+        <option value="cleared">Cleared / CTS</option>
+        <option value="pending">Open / Pending</option>
+        <option value="cancelled">Cancelled / Declined</option>
+      </select>
+    </div>
+  </section>
+
+  <section class="kpis">
+    <article class="kpi">
+      <span>Total Records</span>
+      <strong id="totalRecords">0</strong>
+    </article>
+
+    <article class="kpi">
+      <span>Cleared / CTS</span>
+      <strong id="clearedRecords" class="green">0</strong>
+    </article>
+
+    <article class="kpi">
+      <span>Open / Pending</span>
+      <strong id="pendingRecords" class="yellow">0</strong>
+    </article>
+
+    <article class="kpi">
+      <span>Cancelled / Declined</span>
+      <strong id="cancelledRecords" class="red">0</strong>
+    </article>
+  </section>
+
+  <section class="results">
+    <div class="results-toolbar">
+      <input id="searchBox" type="search"
+             placeholder="Search employee, NT, CCMS ID, client, city, or comments...">
+      <span id="resultCount">0 matching records</span>
+    </div>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Employee</th>
+            <th>NT</th>
+            <th>CCMS ID</th>
+            <th>Outgoing Client</th>
+            <th>Incoming Client</th>
+            <th>New Project</th>
+            <th>Start Date</th>
+            <th>Position</th>
+            <th>Location</th>
+            <th>Comments</th>
+          </tr>
+        </thead>
+        <tbody id="transferTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<script src="transfer-data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
