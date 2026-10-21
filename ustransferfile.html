@@ -1,125 +1,39 @@
-<!doctype html>
+<doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>US Transfer Masterfile Dashboard</title>
-  <link rel="stylesheet" href="styles.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>US Transfer Masterfile Dashboard</title>
+<style>
+:root{color-scheme:dark;--bg:#071426;--panel:#17273c;--panel2:#0c1b30;--line:#334a66;--text:#f7fbff;--muted:#82c3ff;--purple:#6550f3}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px Segoe UI,Arial,sans-serif}header{padding:24px;background:#18283c;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:18px}h1{margin:0 0 8px;font-size:26px}header p{margin:0;color:var(--muted)}main{padding:24px;max-width:1900px;margin:auto}.source{margin-left:auto}.source input{max-width:280px}.filters{display:grid;grid-template-columns:1.05fr 1.25fr 1.25fr 1fr;gap:18px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px}.field{display:flex;flex-direction:column;gap:8px}.field label{color:var(--muted);font-weight:700;font-size:12px}.range{display:grid;grid-template-columns:40px 1fr;gap:8px;align-items:center}.range span{color:#cfe1f4}.month{grid-column:1}.view{grid-column:4}select,input,button,.button{border:1px solid #38506e;border-radius:9px;background:#0c1a2e;color:#fff;padding:11px 14px}.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:20px 0}.kpis article{padding:22px 18px;background:#1c2e45;border:1px solid var(--line);border-radius:14px}.kpis small{color:#91c8ff}.kpis strong{display:block;font-size:30px;margin-top:12px}.green{color:#20dcac}.yellow{color:#ffc21a}.red{color:#ff4e70}.data{background:var(--panel2);border:1px solid var(--line);border-radius:14px;overflow:hidden}.toolbar{display:grid;grid-template-columns:minmax(240px,430px) 1fr auto;align-items:center;gap:16px;padding:14px}.toolbar span{text-align:center;color:#8cc7ff}.button{background:var(--purple);font-weight:700;cursor:pointer}.tableWrap{overflow:auto;max-height:58vh}table{border-collapse:collapse;width:100%;min-width:1450px}th{position:sticky;top:0;background:#243a57;color:#b6d9ff;text-align:left;padding:12px;font-size:12px}td{padding:10px 12px;border-bottom:1px solid #263e5c;white-space:nowrap;max-width:320px;overflow:hidden;text-overflow:ellipsis}.badge{display:inline-block;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:700}.badge.cleared{background:#007b65;color:#79ffe0}.badge.open{background:#705600;color:#ffe382}.badge.cancelled{background:#783044;color:#ff9aad}.note{color:#a8bdd3;margin-top:12px}@media(max-width:900px){.filters{grid-template-columns:1fr 1fr}.month,.view{grid-column:auto}.kpis{grid-template-columns:1fr 1fr}.toolbar{grid-template-columns:1fr}}@media(max-width:560px){main{padding:12px}.filters,.kpis{grid-template-columns:1fr}header{flex-wrap:wrap}.source{margin-left:0}}
+</style>
 </head>
 <body>
-
-<header class="page-header">
-  <div>
-    <h1>US Transfer Masterfile Dashboard</h1>
-    <p>Interactive transfer list</p>
-  </div>
-  <button id="exportButton" class="button">Export Filtered CSV</button>
-</header>
-
-<main class="container">
-
-  <section class="filters">
-    <div class="filter-block">
-      <label>Transfer Year</label>
-      <div class="range-row">
-        <span>From:</span>
-        <select id="yearFrom"></select>
-      </div>
-      <div class="range-row">
-        <span>To:</span>
-        <select id="yearTo"></select>
-      </div>
-
-      <label class="second-label">Transfer Month</label>
-      <div class="range-row">
-        <span>From:</span>
-        <select id="monthFrom"></select>
-      </div>
-      <div class="range-row">
-        <span>To:</span>
-        <select id="monthTo"></select>
-      </div>
-    </div>
-
-    <div class="filter-block">
-      <label>Outgoing Clients</label>
-      <select id="outgoingClient"></select>
-    </div>
-
-    <div class="filter-block">
-      <label>Incoming Client</label>
-      <select id="incomingClient"></select>
-    </div>
-
-    <div class="filter-block">
-      <label>Status</label>
-      <select id="status"></select>
-
-      <label class="second-label">View of this List</label>
-      <select id="listView">
-        <option value="all">All Records</option>
-        <option value="cleared">Cleared / CTS</option>
-        <option value="pending">Open / Pending</option>
-        <option value="cancelled">Cancelled / Declined</option>
-      </select>
-    </div>
-  </section>
-
-  <section class="kpis">
-    <article class="kpi">
-      <span>Total Records</span>
-      <strong id="totalRecords">0</strong>
-    </article>
-
-    <article class="kpi">
-      <span>Cleared / CTS</span>
-      <strong id="clearedRecords" class="green">0</strong>
-    </article>
-
-    <article class="kpi">
-      <span>Open / Pending</span>
-      <strong id="pendingRecords" class="yellow">0</strong>
-    </article>
-
-    <article class="kpi">
-      <span>Cancelled / Declined</span>
-      <strong id="cancelledRecords" class="red">0</strong>
-    </article>
-  </section>
-
-  <section class="results">
-    <div class="results-toolbar">
-      <input id="searchBox" type="search"
-             placeholder="Search employee, NT, CCMS ID, client, city, or comments...">
-      <span id="resultCount">0 matching records</span>
-    </div>
-
-    <div class="table-scroll">
-      <table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Status</th>
-            <th>Employee</th>
-            <th>NT</th>
-            <th>CCMS ID</th>
-            <th>Outgoing Client</th>
-            <th>Incoming Client</th>
-            <th>New Project</th>
-            <th>Start Date</th>
-            <th>Position</th>
-            <th>Location</th>
-            <th>Comments</th>
-          </tr>
-        </thead>
-        <tbody id="transferTableBody"></tbody>
-      </table>
-    </div>
-  </section>
-
+<header><div><h1>US Transfer Masterfile Dashboard</h1><p>Interactive transfer list</p></div><div class="source"><label>Load masterfile: <input id="fileInput" type="file" accept=".csv,text/csv"></label></div></header>
+<main>
+<section class="filters">
+<div class="field"><label>Transfer Year</label><div class="range"><span>From:</span><select id="yearFrom"><option value="">Any Year</option></select><span>To:</span><select id="yearTo"><option value="">Any Year</option></select></div></div>
+<div class="field"><label>Outgoing Client</label><select id="outgoing"><option value="">All Outgoing Clients</option></select></div>
+<div class="field"><label>Incoming Client</label><select id="incoming"><option value="">All Incoming Clients</option></select></div>
+<div class="field"><label>Status</label><select id="status"><option value="">All Statuses</option></select></div>
+<div class="field month"><label>Transfer Month</label><div class="range"><span>From:</span><select id="monthFrom"><option value="">Any Month</option></select><span>To:</span><select id="monthTo"><option value="">Any Month</option></select></div></div>
+<div class="field view"><label>View of this List</label><select id="view"><option value="all">All Records</option><option value="cleared">Cleared / CTS</option><option value="open">Open / Pending</option><option value="cancelled">Cancelled / Declined</option></select></div>
+</section>
+<section class="kpis"><article><small>TOTAL RECORDS</small><strong id="kTotal">0</strong></article><article><small>CLEARED / CTS</small><strong id="kCleared" class="green">0</strong></article><article><small>OPEN / PENDING</small><strong id="kOpen" class="yellow">0</strong></article><article><small>CANCELLED / DECLINED</small><strong id="kCancelled" class="red">0</strong></article></section>
+<section class="data"><div class="toolbar"><input id="search" placeholder="Search employee, NT, CCMS ID or client…"><span id="matching">Load a CSV masterfile to begin</span><button id="exportBtn" class="button" type="button">Export Data</button></div><div class="tableWrap"><table><thead><tr><th>Date</th><th>Status</th><th>Employee</th><th>NT</th><th>CCMS ID</th><th>Outgoing Client</th><th>Incoming Client</th><th>Last Day</th><th>Start Date</th><th>Location</th><th>Remarks</th></tr></thead><tbody id="tbody"></tbody></table></div></section>
+<p class="note">Standalone HTML version. For direct automatic synchronization with the Excel masterfile, use the web-server version supplied separately. Browser-only HTML cannot continuously read an Excel file after it changes without a server/API connection.</p>
 </main>
-
-<script src="transfer-data.js"></script>
-<script src="app.js"></script>
-</body>
-</html>
+<script>
+const $=id=>document.getElementById(id), months=['January','February','March','April','May','June','July','August','September','October','November','December'];let rows=[];
+months.forEach((m,i)=>[$('monthFrom'),$('monthTo')].forEach(s=>s.insertAdjacentHTML('beforeend',`<option value="${i+1}">${m}</option>`)));
+function parseCSV(text){let out=[],row=[],cell='',q=false;for(let i=0;i<text.length;i++){let c=text[i],n=text[i+1];if(c==='"'){if(q&&n==='"'){cell+='"';i++}else q=!q}else if(c===','&&!q){row.push(cell);cell=''}else if((c==='\n'||c==='\r')&&!q){if(c==='\r'&&n==='\n')i++;row.push(cell);if(row.some(x=>x!==''))out.push(row);row=[];cell=''}else cell+=c}row.push(cell);if(row.some(x=>x!==''))out.push(row);return out}
+function bucket(s,r){let t=(s+' '+r).toLowerCase();if(t.includes('clear'))return'cleared';if(['cancel','declin','drop','term','retain'].some(x=>t.includes(x)))return'cancelled';return'open'}
+function ingest(text){const a=parseCSV(text),h=a.shift().map(x=>x.trim()),idx=n=>h.indexOf(n);rows=a.map(v=>{let d=v[idx('Date')]||'',p=new Date(d),status=v[idx('Status')]||'',remarks=v[idx('Remarks')]||'';return{date:d,employee:v[idx('Name')]||'',nt:v[idx('NT')]||'',ccms:v[idx('CCMS ID')]||'',outgoing:v[idx('Previous Project (USE CCMS CODE)')]||'',incoming:v[idx('New Project (USE CCMS CODE)')]||'',last:v[idx('Last Day Planned Work Previous Project')]||'',start:v[idx('New Program NHT Start Date')]||'',city:v[idx('City')]||'',state:v[idx('State')]||'',zip:v[idx('Zip')]||'',status,remarks,bucket:bucket(status,remarks),year:isNaN(p)?'':p.getFullYear(),month:isNaN(p)?'':p.getMonth()+1}});populate();render()}
+function addOptions(id,values){let s=$(id),base=s.options[0];s.innerHTML='';s.append(base);[...new Set(values.filter(Boolean))].sort((a,b)=>String(a).localeCompare(String(b))).forEach(v=>{let o=document.createElement('option');o.value=v;o.textContent=v;s.append(o)})}
+function populate(){addOptions('yearFrom',rows.map(x=>x.year));addOptions('yearTo',rows.map(x=>x.year));addOptions('outgoing',rows.map(x=>x.outgoing));addOptions('incoming',rows.map(x=>x.incoming));addOptions('status',rows.map(x=>x.status))}
+function filtered(){let q=$('search').value.toLowerCase(),yf=+$('yearFrom').value||0,yt=+$('yearTo').value||9999,mf=+$('monthFrom').value||0,mt=+$('monthTo').value||12;return rows.filter(x=>(!q||[x.employee,x.nt,x.ccms,x.outgoing,x.incoming,x.remarks].join(' ').toLowerCase().includes(q))&&(!x.year||(x.year>=yf&&x.year<=yt))&&(!x.month||(x.month>=mf&&x.month<=mt))&&(!$('outgoing').value||x.outgoing===$('outgoing').value)&&(!$('incoming').value||x.incoming===$('incoming').value)&&(!$('status').value||x.status===$('status').value)&&($('view').value==='all'||x.bucket===$('view').value))}
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function render(){let r=filtered(),nf=new Intl.NumberFormat(),count=b=>r.filter(x=>x.bucket===b).length;$('kTotal').textContent=nf.format(r.length);$('kCleared').textContent=nf.format(count('cleared'));$('kOpen').textContent=nf.format(count('open'));$('kCancelled').textContent=nf.format(count('cancelled'));$('matching').textContent=nf.format(r.length)+' matching records';$('tbody').innerHTML=r.slice(0,500).map(x=>`<tr><td>${esc(x.date)}</td><td><span class="badge ${x.bucket}">${esc(x.status||'Open')}</span></td><td>${esc(x.employee)}</td><td>${esc(x.nt)}</td><td>${esc(x.ccms)}</td><td>${esc(x.outgoing)}</td><td>${esc(x.incoming)}</td><td>${esc(x.last)}</td><td>${esc(x.start)}</td><td>${esc([x.city,x.state,x.zip].filter(Boolean).join(', '))}</td><td>${esc(x.remarks)}</td></tr>`).join('')}
+$('fileInput').addEventListener('change',async e=>{if(e.target.files[0])ingest(await e.target.files[0].text())});['yearFrom','yearTo','monthFrom','monthTo','outgoing','incoming','status','view'].forEach(id=>$(id).addEventListener('change',render));$('search').addEventListener('input',render);$('exportBtn').addEventListener('click',()=>{let r=filtered(),cols=['date','status','employee','nt','ccms','outgoing','incoming','last','start','city','state','zip','remarks'],csv=[cols.join(','),...r.map(x=>cols.map(k=>'"'+String(x[k]??'').replaceAll('"','""')+'"').join(','))].join('\r\n'),a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='us-transfer-filtered.csv';a.click();URL.revokeObjectURL(a.href)});
+</script>
+</body></html>
